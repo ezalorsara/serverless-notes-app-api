@@ -14,7 +14,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   stage: dev
-  region: us-east-1
+  region: us-east-2
   # To load environment variables externally
   # rename env.example to .env and uncomment
   # the following line. Also, make sure to not
@@ -22,11 +22,27 @@ provider:
   #
   #environment:
   #  sampleEnvVar: ${env:SAMPLE_ENV_VAR}
+environment: 
+  tableName: notes
+
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+     - dynamodb:DescribeTable
+     - dynamodb:Query
+     - dynamodb:Scan
+     - dynamodb:GetItem
+     - dynamodb:PutItem
+     - dynamodb:UpdateItem
+     - dynamodb:DeleteItem
+    Resource: "arn:aws:dynamodb:us-east-2:*:*"
 
 functions:
-  hello:
-    handler: handler.hello
+  create:
+    handler: create.main
     events:
       - http:
-          path: hello
-          method: get
+          path: notes
+          method: post
+          cors: true
+          authorizer: aws_iam
