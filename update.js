@@ -1,27 +1,27 @@
 import { call } from './libs/dynamodb-lib';
 import { success, failure } from './libs/response-lib';
 export async function main(event) {
-    const data = JSON.parse(event.body);
-    const params = {
-        TableName: process.env.tableName,
-        Key: {
-            userId: event.requestContext.identity.cognitoIdentityId,
-            noteId: event.pathParameters.id
-        },
-        UpdateExpression: "SET content = :content, attachment = :attachment",
-        ExpressionAttributeValues: {
-            ":attachment": data.attachment || null,
-            ":content": data.content || null
-        },
-        ReturnValues: "ALL_NEW"
-    };
+  const data = JSON.parse(event.body);
+  const params = {
+    TableName: process.env.TableName,
+    Key: {
+      userId: event.requestContext.identity.cognitoIdentityId,
+      noteId: event.pathParameters.id
+    },
+    UpdateExpression: "SET content = :content, attachment = :attachment",
+    ExpressionAttributeValues: {
+      ":attachment": data.attachment || null,
+      ":content": data.content || null
+    },
+    ReturnValues: "ALL_NEW"
+  };
 
-    try {
-        await call('update', params);
-        return success({status: true });
-    } catch (err) {
-        // Not the best approach to log an error
-        console.log(err);
-        return failure({ status: false });
-    }
+  try {
+    await call('update', params);
+    return success({ status: true });
+  } catch (err) {
+    // Not the best approach to log an error
+    console.log(err);
+    return failure({ status: false });
+  }
 }

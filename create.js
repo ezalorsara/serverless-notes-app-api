@@ -4,7 +4,7 @@ import { success, failed } from './libs/response-lib';
 export async function main(event) {
   const data = JSON.parse(event.body);
   const params = {
-    TableName: process.env.tableName,
+    TableName: process.env.TableName,
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
       noteId: uuid.v1(),
